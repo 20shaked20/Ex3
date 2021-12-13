@@ -43,7 +43,8 @@ void geometric_sequence(char *word, char *txt)
     int i = 0;         // inside loop index.
     int j = 0;         // outside loop index.
     // The String im printing.
-    char *Printout = (char *)malloc(sizeof(char) * TXT);
+    // char *Printout = (char *)malloc(sizeof(char) * TXT);
+    char *Printout = (char *)calloc(TXT,sizeof(char));
     if (Printout == NULL)
     {
         printf("Printout Memory allocation fault");
@@ -71,7 +72,7 @@ void geometric_sequence(char *word, char *txt)
             // good case, we got to a same gematria sum, therefore check the word.
             else if (txt_sum == word_sum)
             {
-                    char *sub_string = (char *)malloc(sizeof(char) * WORD);
+                    char *sub_string = (char *)calloc(WORD,sizeof(char));
                     if (sub_string == NULL)
                     {
                         printf("MEMORY FAULT");
@@ -236,7 +237,7 @@ void atbash_sequence(char *word, char *txt)
     str_rev(reverse);
 
     //String im printing.
-    char *Printout = (char *)malloc(sizeof(char) * TXT);
+    char *Printout = (char *)calloc(TXT,sizeof(char)); // reset memory.
     if (Printout == NULL)
     {
         printf("Printout Memory allocation fault");
@@ -244,7 +245,7 @@ void atbash_sequence(char *word, char *txt)
 
     int i = 0;
     int j = 0;
-
+    
     //TXT travesring:
     for (j = 0; txt[j]; ++j)
     {
@@ -252,7 +253,7 @@ void atbash_sequence(char *word, char *txt)
         {
             if (strchr(word_copy, txt[i]) != NULL || char_value_transform(txt[i]) == 0)
             {
-                char *sub_string = (char *)malloc(sizeof(char) * WORD);
+                char *sub_string = (char *)calloc(WORD,sizeof(char));
                 if (sub_string == NULL)
                 {
                     printf("MEMORY FAULT");
@@ -264,10 +265,10 @@ void atbash_sequence(char *word, char *txt)
                     tmp++;
                 }
                 sub_string[tmp] = '\0';
-
+                //alphabet sanity.
                 if (char_value_transform(*(txt + j)) != 0 && char_value_transform(*(txt + i)) != 0)
                 {
-                    // printf("SUBSTRING: %s \n", sub_string);
+                    
                     if (str_cmp(word_copy, sub_string) == 0 || str_cmp(reverse, sub_string) == 0)
                     {
                         // '~' manipulation to fit my code.
@@ -292,7 +293,7 @@ void atbash_sequence(char *word, char *txt)
 }
 
 /////////////////////////// anagram methods /////////////////////////////////
-
+/// TODO: FIX THIS ONLY TO CONSIDER BLANK SPACESSSS FUCKING STPD IDIOT NIGGER
 /**
  * This is a private method i created to check if a string is an angram of another string.
  */
@@ -344,7 +345,7 @@ void anagram_sequence(char *word, char *txt)
     int j = 0;                        // outside loop index.
     int word_size = 0;                // calcualtes the current txt word size, so i can know where it ends.
     int real_size = strlen(word) - 1; // ignore \0
-    char *Printout = (char *)malloc(sizeof(char) * TXT);
+    char *Printout = (char *)calloc(TXT,sizeof(char)); // changed to calloc so my print will reset
     if (Printout == NULL)
     {
         printf("Printout Memory allocation fault");
@@ -359,7 +360,7 @@ void anagram_sequence(char *word, char *txt)
         {
             // checks if the word contains the character in current positon, or its blank.
 
-            if (strchr(word, txt[i]) != NULL || char_value_transform(txt[i]) == 0)
+            if (strchr(word, txt[i]) != NULL || txt[i] == ' ')
             {
                 // printf("THE J IS : %d \n ",j);
                 // printf("Txt[i]: %c \n", txt[i]);
@@ -371,7 +372,7 @@ void anagram_sequence(char *word, char *txt)
                     if (word_size == real_size)
                     {
                         // Substring creation:
-                        char *sub_string = (char *)malloc(sizeof(char) * WORD);
+                        char *sub_string = (char *)calloc(WORD,sizeof(char));
                         if (sub_string == NULL)
                         {
                             printf("MEMORY FAULT");
