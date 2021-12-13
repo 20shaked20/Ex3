@@ -10,7 +10,7 @@ all: stringProg
 
 
 stringProg: $(OBJECTS_Main) lib_strings.a
-	$(CC) $(FLAGS) -o stringProg $(OBJECTS_Main) lib_strings.a -
+	$(CC) $(FLAGS) -o stringProg $(OBJECTS_Main) lib_strings.a 
 
 #Make commands as singles:
 

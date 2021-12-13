@@ -1,7 +1,6 @@
 //
 // Created by Shaked Levi on 10/12/2021
 //
-
 #define TXT 1024
 #define WORD 30
 
@@ -9,16 +8,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-
-char *word;
-char *txt;
-
-void load(char *word, char *txt)
-{
-    
-}
-/////////////////////////// Gematria Methods /////////////////////////////////
-/// TODO: fix the '~' appearing in last.
 
 /**
  * This is a prive method that converts Charaters of the english alphabet to 1-26.
@@ -30,31 +19,37 @@ int char_value_transform(char c)
     // a-z case
     if (loc > 96 && loc < 123)
     {
-        c = c - 'a' + 1;
-        return c;
+        loc = c - 'a' + 1;
+        return loc;
     }
     // A-Z case
     else if (loc > 64 && loc < 91)
     {
-        c = c - 'A' + 1;
-        return c;
+        loc = c - 'A' + 1;
+        return loc;
     }
     // all other is equal to zero.
     else
     {
-        loc = 0;
-        return loc;
+        return 0;
     }
 }
 
-void geometric_sequence(char *word, char *txt)
+// THE MAIN METHOD:
+void Gematria_Sequences(char *word, char *txt)
 {
     printf("Gematria Sequences: ");
-    int txt_sum = 0;   // the sum i calcaulte to the word in the text.
-    int word_sum = 0;  // the geometric sum of the the current word.
-    int i = 0;         // inside loop index.
-    int j = 0;         // outside loop index.
-    int word_size = 0; // calcualtes the current txt word size, so i can know where it ends.
+    int txt_sum = 0;  // the sum i calcaulte to the word in the text.
+    int word_sum = 0; // the geometric sum of the the current word.
+    int i = 0;        // inside loop index.
+    int j = 0;        // outside loop index.
+    // The String im printing.
+    // char *Printout = (char *)malloc(sizeof(char) * TXT);
+    char *Printout = (char *)calloc(TXT, sizeof(char));
+    if (Printout == NULL)
+    {
+        printf("Printout Memory allocation fault");
+    }
 
     // Calculates the sum of the current word
     while (word[i] != '\0')
@@ -63,12 +58,10 @@ void geometric_sequence(char *word, char *txt)
         ++i;
     }
 
-    // TXT traversing loops :
     for (j = 0; txt[j]; ++j)
     {
         //Resets:
         txt_sum = 0;
-        word_size = 0;
 
         for (i = j; txt[i]; ++i)
         {
@@ -80,14 +73,25 @@ void geometric_sequence(char *word, char *txt)
             // good case, we got to a same gematria sum, therefore check the word.
             else if (txt_sum == word_sum)
             {
-                // checks that start&last index are alphbet, other wise it has unwatned 'spaces'.
-                if (char_value_transform(*(txt + j)) != 0 && char_value_transform(*(txt + i - word_size)) != 0)
+                char *sub_string = (char *)calloc(WORD, sizeof(char));
+                if (sub_string == NULL)
                 {
-                    for (int loop = j; loop < i; ++loop)
-                    {
-                        printf("%c", txt[loop]);
-                    }
-                    printf("~");
+                    printf("MEMORY FAULT");
+                }
+                int tmp = 0;
+                for (int loop = j; loop < i; ++loop)
+                {
+                    sub_string[tmp] = txt[loop];
+                    tmp++;
+                }
+                // checks that start&last index are alphbet, other wise it has unwatned 'spaces'.
+                if (char_value_transform(sub_string[0]) != 0 && char_value_transform(sub_string[strlen(sub_string) - 1]) != 0)
+                {
+                    sub_string[tmp] = '~'; // adding to the last word.
+                    tmp++;
+                    sub_string[tmp] = '\0';
+                    strcat(Printout, sub_string);
+                    free(sub_string);
                 }
                 break;
             }
@@ -95,14 +99,17 @@ void geometric_sequence(char *word, char *txt)
             else
             {
                 txt_sum += char_value_transform(txt[i]);
-                word_size++;
             }
         }
     }
+    Printout[strlen(Printout) - 1] = '\0'; // set the last position from ~ to null, i dont want it to print anything.
+    printf("%s", Printout);
+    free(Printout);
 }
 
 /////////////////////////// ATBASH method /////////////////////////////////
-// converts the char to its rightful location in atbash.
+
+///TODO: create more tests for atbash testing. rn its working good.
 
 /**
  * This is a private method that converts Charaters of the english alphabet to thier 'Atbash' charater.
@@ -130,6 +137,7 @@ char atbash_value_transform(char c)
         return loc;
     }
 }
+
 /**
  * This is a private method that gets a word pointer, and converts the entire word to 'Atbash' word.
  */
@@ -141,6 +149,7 @@ void atbash_converter(char *word)
         *(word + i) = atbash_value_transform(word[i]);
     }
 }
+
 /**
  * This is a private method that gets a word pointer and reverses it.
  */
@@ -176,6 +185,7 @@ void str_rev(char *str)
         end_ptr--;
     }
 }
+
 /**
  * This is a private illustartion of the strcmp() method that is given to us in the strings library.
  * i had to maniuplate it a bit so it would consider blanks, 
@@ -187,10 +197,12 @@ int str_cmp(char *str1, char *str2)
     int word_length = strlen(str1);
     for (int loop = 0; str2[loop]; ++loop)
     {
+        // any blank space in between, hence i dont care.
         if (char_value_transform(str2[loop]) == 0)
-        { // any blank space in between, hence i dont care.
+        {
             ++loop;
         }
+        //checks if in same position, while ignoring blanks the strings are equal.
         if (*(str1 + str1_counter) == *(str2 + loop))
         {
             str1_counter++;
@@ -209,9 +221,9 @@ int str_cmp(char *str1, char *str2)
         return -1; // not equal
     }
 }
-/// TODO: fix the atbash, rn not working properly.
 
-void atbash_sequence(char *word, char *txt)
+// THE MAIN METHOD:
+void Atbash_Sequences(char *word, char *txt)
 {
     printf("Atbash Sequences: ");
     //Create an atbash word from the current word:
@@ -232,6 +244,13 @@ void atbash_sequence(char *word, char *txt)
     strcpy(reverse, word_copy);
     str_rev(reverse);
 
+    //String im printing.
+    char *Printout = (char *)calloc(TXT, sizeof(char)); // reset memory.
+    if (Printout == NULL)
+    {
+        printf("Printout Memory allocation fault");
+    }
+
     int i = 0;
     int j = 0;
 
@@ -242,7 +261,7 @@ void atbash_sequence(char *word, char *txt)
         {
             if (strchr(word_copy, txt[i]) != NULL || char_value_transform(txt[i]) == 0)
             {
-                char *sub_string = (char *)malloc(sizeof(char) * WORD);
+                char *sub_string = (char *)calloc(WORD, sizeof(char));
                 if (sub_string == NULL)
                 {
                     printf("MEMORY FAULT");
@@ -254,30 +273,34 @@ void atbash_sequence(char *word, char *txt)
                     tmp++;
                 }
                 sub_string[tmp] = '\0';
-
+                //alphabet sanity.
                 if (char_value_transform(*(txt + j)) != 0 && char_value_transform(*(txt + i)) != 0)
                 {
-                    // printf("SUBSTRING: %s \n", sub_string);
+
                     if (str_cmp(word_copy, sub_string) == 0 || str_cmp(reverse, sub_string) == 0)
                     {
-                        // printf("ASDGASDGASDG");
-                        printf(" ~ %s", sub_string);
+                        // '~' manipulation to fit my code.
+                        sub_string[tmp] = '~';
+                        tmp++;
+                        sub_string[tmp] = '\0';
+                        strcat(Printout, sub_string);
                         break;
                     }
                 }
+
                 free(sub_string);
             }
         }
     }
+    Printout[strlen(Printout) - 1] = '\0'; // set the last position from ~ to null, i dont want it to print anything.
+    printf("%s", Printout);
+    free(Printout);
     free(reverse);
     free(word_copy);
 }
 
-/////////////////////////// Anagram Methods /////////////////////////////////////
+/////////////////////////// anagram methods /////////////////////////////////
 
-/**
- * This is a private method i created to check if a string is an angram of another string.
- */
 /**
  * This is a private method i created to check if a string is an angram of another string.
  */
@@ -322,14 +345,15 @@ int anagram_check(char *str1, char *str2)
     return 0; // is equal for sure.
 }
 
-void anagram_sequence(char *word, char *txt)
+// THE MAIN METHOD:
+void Anagram_Sequences(char *word, char *txt)
 {
     printf("anagram Sequence: ");
-    int i = 0;                        // inside loop index.
-    int j = 0;                        // outside loop index.
-    int word_size = 0;                // calcualtes the current txt word size, so i can know where it ends.
-    int real_size = strlen(word) - 1; // ignore \0
-    char *Printout = (char *)malloc(sizeof(char) * TXT);
+    int i = 0;                                          // inside loop index.
+    int j = 0;                                          // outside loop index.
+    int word_size = 0;                                  // calcualtes the current txt word size, so i can know where it ends.
+    int real_size = strlen(word) - 1;                   // ignore \0
+    char *Printout = (char *)calloc(TXT, sizeof(char)); // changed to calloc so my print will reset
     if (Printout == NULL)
     {
         printf("Printout Memory allocation fault");
@@ -344,27 +368,23 @@ void anagram_sequence(char *word, char *txt)
         {
             // checks if the word contains the character in current positon, or its blank.
 
-            if (strchr(word, txt[i]) != NULL || char_value_transform(txt[i]) == 0)
+            if (strchr(word, txt[i]) != NULL || txt[i] == ' ')
             {
-                // only increase the word size if its a real charater that resides inside our word.
-                if (strchr(word, txt[i]) != NULL)
+                // checks that start&last index are alphbet.
+                if (char_value_transform(*(txt + j)) != 0 && char_value_transform(*(txt + i)) != 0)
                 {
                     word_size++;
-                }
-                // good case, where our txt word reached the real size of the given word.
-                if (word_size == real_size)
-                {
-                    // checks that start&last index are alphbet.
-                    if (char_value_transform(*(txt + j)) != 0 && char_value_transform(*(txt + i - word_size)) != 0)
+                    // good case, where our txt word reached the real size of the given word.
+                    if (word_size == real_size)
                     {
                         // Substring creation:
-                        char *sub_string = (char *)malloc(sizeof(char) * WORD);
+                        char *sub_string = (char *)calloc(WORD, sizeof(char));
                         if (sub_string == NULL)
                         {
                             printf("MEMORY FAULT");
                         }
                         int tmp = 0;
-                        for (int loop = j; loop < i; ++loop)
+                        for (int loop = j; loop <= i; ++loop)
                         {
                             sub_string[tmp] = txt[loop];
                             tmp++;
@@ -381,7 +401,6 @@ void anagram_sequence(char *word, char *txt)
                             strcat(Printout, sub_string);
                         }
                         free(sub_string);
-                        break;
                     }
                 }
             }
@@ -392,5 +411,7 @@ void anagram_sequence(char *word, char *txt)
             }
         }
     }
+    Printout[strlen(Printout) - 1] = '\0'; // set the last position from ~ to null, i dont want it to print anything.
     printf("%s", Printout);
+    free(Printout);
 }
