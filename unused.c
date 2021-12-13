@@ -1,158 +1,115 @@
+/////////////////////////// anagram methods /////////////////////////////////
+// THIS METHOD IS WORKING FOR BEE, but not for SEA FOR SOME REASON. maybe their angram meaning is wrong yaben zona
+
 /**
- * Trick to sum -> char[pos] -a +1; == exact number in sequcne of 1,2,3...
- * This is a private method to calculate the geometric sum of our word, without overwriting the real word.
+ * This is a private method i created to check if a string is an angram of another string.
  */
-// FIX FIX FIX! : 
-// IDEA ON LOWER CASING ( CHECK THE ASQII if lower than 60, then its lower, and if bigger its upper )!!! no need to tolower! X_X im stpd.
-int word_sum(){
-    char *traverse = (char*)malloc(sizeof(char)*WORD); // creating a secondery pointer, so i wont overwrite my own word.
-    if (traverse == NULL)
+int anagram_check(char *str1, char *str2)
+{ // i guess str2 will be bigger because i consider blanks. << check this for the loop fix,.
+
+    if (str_cmp(str1, str2) == 0)
+    { // checks that the strings are not equal in char location.
+        return 0;
+    }
+    int arr[26]; // as the size of possible letters in alphabet
+    int char_index1 = 0;
+    int char_index2 = 0;
+    int loop = 0;
+    //reset array to 0.
+    for (loop = 0; loop < 26; ++loop)
     {
-        printf("Memory allocation fault");
+        arr[loop] = 0;
     }
-    strcpy(traverse,word); // copying the exact word to traverse.
-    int i = 0;
-    int sum = 0;
-    for(i =0; traverse[i]; ++i){
-        traverse[i] = tolower(traverse[i]);
-        sum+=traverse[i] - 'a'+1; // the geometric sum of the word.
+    // This loop counts how many occurences each charater has and adds it to the original array.
+    for (loop = 0; loop < strlen(str1) - 1; ++loop)
+    {
+        char_index1 = char_value_transform(str1[loop]);
+        arr[char_index1] += 1;
     }
-    return sum;
+    // This loop counts how many occurences each charater has and removes it from the original array.
+    for (loop = 0; loop < strlen(str2); ++loop)
+    {
+        char_index2 = char_value_transform(str2[loop]);
+        arr[char_index2] -= 1;
+    }
 
-}
-void geometric_sequence(char *word, char*txt){
-  
-    printf("geometric_sequence: \n");
-    int txt_sum = 0;
-    int i =0;
-    int word_sum = 0; // the geometric sum of the word.
-
-    // Calculates the sum.
-    while(word[i]!='\0'){
-        word_sum+=char_value_transform(word[i]);
-        ++i;
-    }
-    printf("The word Sum is: %d \n",word_sum );
-    
-    int j =0;
-    i =0; // starting index, updates everytime.
-    int word_size = 0;
-    for(j = 0; txt[j]; ++j){
-        if(txt_sum>word_sum){
-            txt_sum = 0;
-            word_size = 0;
-            ++i;
-            j = i; // start again from the next index.
-        }else if( txt_sum == word_sum){
-            char *sub_string = (char*)malloc(sizeof(char)*WORD);
-            if(sub_string==NULL){
-                printf("MEMORY FAULT");
-            }
-            printf("%s~", strncpy(sub_string,txt+i,word_size));
-            txt_sum = 0;
-            ++i;
-            j = i;
-            word_size = 0;
-            free(sub_string);
-        }else{
-            txt_sum+=char_value_transform(*(txt+j));
-            word_size++;
+    // Loop checking if the array is 0, if yes then the word is anagram of the other one.
+    // if no: then there was more than occurences of a word in the 2nd string.
+    for (loop = 1; loop < 26; ++loop)
+    {
+        if (arr[loop] != 0)
+        {
+            return -1; 
         }
     }
+    return 0; // is equal for sure.
 }
 
-
-//////// TEST FUNCTIONALY OF GEMOETRIC???????
-void geometric_sequence(char *word, char*txt){
-  
-    printf("geometric_sequence: \n");
-    int txt_sum = 0;
-    int i =0;
-    int word_sum = 0; // the geometric sum of the word.
-
-    // Calculates the sum.
-    while(word[i]!='\0'){
-        word_sum+=char_value_transform(word[i]);
-        ++i;
+void anagram_sequence(char *word, char *txt)
+{
+    printf("anagram Sequence: ");
+    int i = 0; // inside loop index.
+    int j = 0; // outside loop index.
+    int word_size = 0; // calcualtes the current txt word size, so i can know where it ends.
+    int real_size = strlen(word)-1; // ignore \0
+    char* Printout = (char*)malloc(sizeof(char)*TXT);
+    if(Printout == NULL){
+        printf("Printout Memory allocation fault");
     }
-    printf("The word Sum is: %d \n",word_sum );
-    
-    int j =0;
-    i =0; // starting index, updates everytime.
-    int word_size = 0;
-    for(j = 0; txt[j]; ++j){
-        if(txt_sum>word_sum){
-            txt_sum = 0;
-            word_size = 0;
-            j = i;
-            ++i;
-            // start again from the next index.
-        }else if(txt_sum == word_sum){
-            char *sub_string = (char*)malloc(sizeof(char)*TXT);
-            if(sub_string==NULL){
-                printf("MEMORY FAULT");
-            }
-            strncpy(sub_string,(txt+j-word_size),(word_size));
-            // if(char_value_transform(sub_string[0])!=0){
-                printf("%s~",sub_string);
-                txt_sum = 0;
-                i+=word_size-2;
-                j = i;
-                word_size = 0;
-                free(sub_string);
-            // }
-        }else{
-                txt_sum+=char_value_transform(*(txt+j));
-                word_size++;
+
+    //TXT traversing:
+    for (j = 0; txt[j]; ++j)
+    {   
+        //resets
+        word_size = 0;
+        for (i = j; txt[i]; ++i)
+        {
+            // checks if the word contains the character in current positon, or its blank.
             
-    }
-}
-}
+            if (strchr(word, txt[i]) != NULL || char_value_transform(txt[i]) == 0)
+            {   
+                // printf("THE J IS : %d \n ",j);
+                // printf("Txt[i]: %c \n", txt[i]); 
+                    // checks that start&last index are alphbet.
+                    if (char_value_transform(*(txt + j)) != 0 && char_value_transform(*(txt + i)) != 0)
+                    { 
+                        word_size++;
+                        // good case, where our txt word reached the real size of the given word.
+                        if (word_size == real_size)
+                        {
+                        // Substring creation: 
+                        char *sub_string = (char *)malloc(sizeof(char) * WORD);
+                        if (sub_string == NULL)
+                        {
+                            printf("MEMORY FAULT");
+                        }
+                        int tmp = 0;
+                        for (int loop = j; loop <= i; ++loop)
+                        {
+                            sub_string[tmp] = txt[loop];
+                            tmp++;
+                        }
+                        sub_string[tmp] = '~'; // adding to the last word.
+                        tmp++;
+                        sub_string[tmp] = '\0';
 
-
-//////////// TMP GEOMATRY////
-void geometric_sequence(char *word, char*txt){
-  
-    printf("geometric_sequence: \n");
-    int txt_sum = 0;
-    int i =0;
-    int word_sum = 0; // the geometric sum of the word.
-
-    // Calculates the sum.
-    while(word[i]!='\0'){
-        word_sum+=char_value_transform(word[i]);
-        ++i;
-    }
-    printf("The word Sum is: %d \n",word_sum );
-    int j =0;
-    i =0; // starting index, updates everytime.
-    int word_size = 0;
-    for(j = 0 ; txt[j]; ++j){
-       for(i = j ; txt[i]; ++i){
-           if(txt_sum>word_sum){
-               txt_sum = 0;
-               word_size = 0;
-           }else if(txt_sum == word_sum){
-            char *sub_string = (char*)malloc(sizeof(char)*TXT);
-            if(sub_string==NULL){
-                printf("MEMORY FAULT");
+                        // printf("SubSTRING: %s\n ",sub_string);
+                        //check if the substring is an anagram of our word.
+                        if (anagram_check(word, sub_string) == 0)
+                        {
+                            //combine all the strings togheter.
+                            strcat(Printout,sub_string);
+                        }
+                        free(sub_string);
+                    }
+                }
             }
-            strncpy(sub_string,(txt+i-word_size),(word_size));
-            int last_pos = strlen(sub_string)-1;
-            if(char_value_transform(sub_string[0])!=0 && char_value_transform(sub_string[last_pos])!=0){
-                printf("%s~",sub_string);
+            //bad case, it broke the sequence, hence break the loop.
+            else
+            {
+                break;
             }
-                i+=word_size;
-                word_size = 0;
-                txt_sum = 0;
-                free(sub_string);
-           }
-           else{
-                txt_sum+=char_value_transform(*(txt+i));
-                word_size++;
-            
-           }
-       }
+        }
     }
+    printf("%s",Printout);
 }
-

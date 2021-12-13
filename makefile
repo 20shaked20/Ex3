@@ -1,7 +1,7 @@
 #VARIABLES:
 CC=gcc
 AR=ar
-OBJECTS_mat = my_mat.o 
+OBJECTS_mat = stringProg.o 
 OBJECTS_Main = main.o
 FLAGS= -Wall -g
 
@@ -9,25 +9,25 @@ FLAGS= -Wall -g
 all: stringProg 
 
 
-stringProg: $(OBJECTS_Main) libmy_mata.a
-	$(CC) $(FLAGS) -o connections $(OBJECTS_Main) libmy_mata.a
+stringProg: $(OBJECTS_Main) lib_strings.a
+	$(CC) $(FLAGS) -o stringProg $(OBJECTS_Main) lib_strings.a
 
 #Make commands as singles:
 
 #libmy_mat.so: $(OBJECTS_mat)  #dynamic library for my_mat < FIX DYNAMIC 
 #	$(CC) $(FLAGS) -shared -o libmy_mat.so $(OBJECTS_mat)
 
-libmy_mata.a: $(OBJECTS_mat) #static library for rec and normal
-	$(AR) -rcs libmy_mata.a $(OBJECTS_mat)
+lib_strings.a: $(OBJECTS_mat) #static library for rec and normal
+	$(AR) -rcs lib_strings.a $(OBJECTS_mat)
 
-my_mat.o: my_mat.c my_mat.h
-	$(CC) $(FLAGS) -c my_mat.c
+stringProg.o: stringProg.c stringProg.h
+	$(CC) $(FLAGS) -c stringProg.c
 
 
-main.o: main.c my_mat.h
+main.o: main.c stringProg.h
 	$(CC) $(FLAGS) -c main.c 
 
 .PHONY: clean all
 
 clean:
-	rm -f *.o *.so connections libmy_mata.a
+	rm -f *.o *.so StringProg lib_strings.a
