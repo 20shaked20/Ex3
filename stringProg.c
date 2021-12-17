@@ -50,7 +50,6 @@ void Gematria_Sequences(char *word, char *txt)
     {
         printf("Printout Memory allocation fault");
     }
-
     // Calculates the sum of the current word
     while (word[i] != '\0')
     {
@@ -358,7 +357,6 @@ void Anagram_Sequences(char *word, char *txt)
     {
         printf("Printout Memory allocation fault");
     }
-
     //TXT traversing:
     for (j = 0; txt[j]; ++j)
     {

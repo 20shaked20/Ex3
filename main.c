@@ -9,7 +9,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "StringProg.h"
-
+int check_c(char c){
+    if(c=='\n' || c==',' || c=='\t' || c==' '){
+        return 1;
+    }else{
+        return 0;
+    }
+}
 int main()
 {
     char *word = (char *)malloc(sizeof(char) * WORD);
@@ -25,7 +31,7 @@ int main()
     char c;
     int i = 0;
     ///TODO: FIX THIS C<
-    while (c != '\n')
+    while (check_c(c)!=1)
     {
         scanf("%c", &c);
         word[i] = c;
