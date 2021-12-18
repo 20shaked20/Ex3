@@ -347,7 +347,7 @@ int anagram_check(char *str1, char *str2)
 // THE MAIN METHOD:
 void Anagram_Sequences(char *word, char *txt)
 {
-    printf("Anagram Sequence: ");
+    printf("Anagram Sequences: ");
     int i = 0;                                          // inside loop index.
     int j = 0;                                          // outside loop index.
     int word_size = 0;                                  // calcualtes the current txt word size, so i can know where it ends.
