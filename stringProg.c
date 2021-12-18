@@ -101,9 +101,11 @@ void Gematria_Sequences(char *word, char *txt)
             }
         }
     }
-    Printout[strlen(Printout) - 1] = '\0'; // set the last position from ~ to null, i dont want it to print anything.
-//     strncpy(Printout,Printout,strlen(Printout)-1);
-    printf("%s", Printout);
+    // Printout[strlen(Printout) - 1] = '\0'; // set the last position from ~ to null, i dont want it to print anything.
+    // printf("%s", Printout);
+        for(int i =0 ;i<strlen(Printout)-1; ++i){
+        printf("%c",Printout[i]);
+    }
     free(Printout);
 }
 
@@ -292,9 +294,11 @@ void Atbash_Sequences(char *word, char *txt)
             }
         }
     }
-    Printout[strlen(Printout) - 1] = '\0'; // set the last position from ~ to null, i dont want it to print anything.
-//     strncpy(Printout,Printout,strlen(Printout)-1);
-    printf("%s", Printout);
+    // Printout[strlen(Printout) - 1] = '\0'; // set the last position from ~ to null, i dont want it to print anything.
+    // printf("%s", Printout);
+    for(int i =0 ;i<strlen(Printout)-1; ++i){
+        printf("%c",Printout[i]);
+    }
     free(Printout);
     free(reverse);
     free(word_copy);
@@ -411,8 +415,10 @@ void Anagram_Sequences(char *word, char *txt)
             }
         }
     }
-    Printout[strlen(Printout) - 1] = '\0'; // set the last position from ~ to null, i dont want it to print anything.
-//     strncpy(Printout,Printout,strlen(Printout)-1);
-    printf("%s", Printout);
+    // Printout[strlen(Printout) - 1] = '\0'; // set the last position from ~ to null, i dont want it to print anything.
+    // printf("%s", Printout);
+        for(int i =0 ;i<strlen(Printout)-1; ++i){
+        printf("%c",Printout[i]);
+    }
     free(Printout);
 }
