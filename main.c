@@ -8,7 +8,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "StringProg.h"
+#include "stringProg.h"
 int check_c(char c){
     if(c=='\n' || c==',' || c=='\t' || c==' '){
         return 1;
